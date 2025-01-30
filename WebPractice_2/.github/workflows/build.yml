@@ -1,33 +1,29 @@
-name: Build ASP.NET Core Project
+name: Build and Upload Artifact
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # Ejecuta el pipeline cuando haya cambios en la rama "main"
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Se ejecuta en un servidor con Ubuntu
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Checkout código
+        uses: actions/checkout@v3  # Descarga el código desde GitHub
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+      - name: Instalar dependencias
+        run: echo "Aquí puedes instalar dependencias si es necesario"
+
+      - name: Construir el proyecto
+        run: |
+          mkdir output
+          echo "Este es mi artifact generado" > output/archivo.txt
+
+      - name: Guardar artifacts
+        uses: actions/upload-artifact@v3
         with:
-          dotnet-version: 8.0 
-
-      - name: Restore Dependencies
-        run: dotnet restore
-
-      - name: Build Project
-        run: dotnet build --configuration Release --no-restore
-
-      - name: Run Tests 
-        run: dotnet test --no-restore --verbosity normal
-
-        name: 
+          name: mi-artifact
+          path: output/
+          retention-days: 7  # El artifact se almacena por 7 días
